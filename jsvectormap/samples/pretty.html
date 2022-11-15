@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../network.ico"/>
+    <title>World Energy Consumption</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../dist/css/jsvectormap.css" />
+    <script src="../dist/js/jsvectormap.min.js"></script>
+    <script src="../dist/maps/world.js"></script>
+</head>
+<body>
+  <div id="map" style="width: 80%;height: 850px;margin: auto"></div>
+
+  <div class="valuecontainer">
+    <p id="slide-value" class="year">1900</p>
+  </div>
+
+
+  <div class="slidecontainer" style="align-items: center;">
+    <input type="range" min="1900" max="2019" value="1900" class="slider" id="myRange" oninput="changeNumber()">
+  </div>
+
+
+  <script>
+    var markers = [{
+        name: 'Russia',
+        coords: [61, 105],
+      },
+      {
+        name: 'Geenland',
+        coords: [72, -42],
+      },
+      {
+        name: 'Canada',
+        coords: [56, -106],
+      },
+      {
+        name: 'Palestine',
+        coords: [31.5, 34.8],
+      },
+      {
+        name: 'Brazil',
+        coords: [-14.2350, -51.9253],
+      },  
+    ];
+
+    var map = new jsVectorMap({
+      map: 'world',
+      selector: '#map',
+      zoomButtons: false,
+      markersSelectable: true,
+
+
+      onMarkerSelected(index, isSelected, selectedMarkers) {
+        console.log(index, isSelected, selectedMarkers);
+      },
+
+      // -------- Labels --------
+      labels: {
+        markers: {
+          render: function(marker) {
+            return marker.name;
+          },
+        },
+      },
+
+      // -------- Marker and label style --------
+      //markers: markers,
+      markerStyle: {
+        initial: {
+          fill: '#ff4551',
+          r: 7,
+          strokeWidth: 5
+        },
+        selected: {
+          fill: '#00f'
+        }
+      },
+      markerLabelStyle: {
+        initial: {
+          // It would be nice if you change this font
+          fontFamily: 'Sans-serif',
+          fontSize: 13.5,
+          fontWeight: 500,
+          fill: '#35373e',
+        },
+      },
+    })
+
+    function changeNumber(){
+      var slider = document.getElementById("myRange");
+      var output = document.getElementById("slide-value");
+
+      output.innerHTML = slider.value;
+    }
+  </script>
+</body>
+</html>
