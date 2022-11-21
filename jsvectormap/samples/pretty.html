@@ -13,14 +13,109 @@
     <script type="text/javascript" src="../scripts/pretty.js"></script>
 </head>
 <body>
+  <div id="btn-group" style="width: 80%;margin: auto">
+
+    <div class="btn-group">
+      <button onclick="
+          document.getElementById('map').style.display = '';
+          document.getElementById('div_range').style.display = '';
+          document.getElementById('year').style.display = '';
+        ">Map
+      
+    </button>
+    <button onclick="
+        document.getElementById('map').style.display = 'none';
+        document.getElementById('div_range').style.display = 'none';
+        document.getElementById('year').style.display = 'none';
+      ">Chart</button>
+    </div>
+  </div>
+
+  <div id="attributes" style="width: 80%; margin: auto; padding-top: 20px; padding-bottom: 20px; display: flex;">
+    <div>
+
+      <p><b>All sources/ One source</b></p>
+
+
+      <div>
+        <input type="radio" id="all_data" name="drone" value="all_data" checked>
+        <label for="all_data">All Data</label>
+      </div>
+    
+      <div>
+        <input type="radio" id="select_source" name="drone" value="select_source">
+        <label for="select_source">Select a source</label>
+      </div>
+
+    </div>
+
+
+    <div style="padding-left: 15%;">
+
+      <p><b>Energy source</b></p>
+
+
+      <select name="source" id="source" style="width: 100px;">
+        <option value="gas">Gas</option>
+        <option value="wind">Wind</option>
+        <option value="solar">Solar</option>
+      </select>
+
+    </div>
+
+    <div style="padding-left: 15%;">
+
+      <p><b>Electricity or Primary:</b></p>
+
+
+      <div>
+        <input type="radio" id="electricity" name="teste" value="electricity" checked>
+        <label for="electricity">Electricity</label>
+      </div>
+    
+      <div>
+        <input type="radio" id="primary_energy" name="teste" value="primary_energy">
+        <label for="primary_energy">Primary Energy</label>
+      </div>
+
+    </div>
+
+
+    <div style="padding-left: 15%;">
+
+      <p><b>Metric</b></p>
+
+
+      <select name="source" id="source" style="width: 250px;">
+        <option value="annual_change_percentage">Annual change (%) in consumption</option>
+        <option value="annual_change_terawats">Annual change (TWh) in consumption</option>
+        <option value="share_of_electricity">Share of electricity/primary energy consumption</option>
+        <option value="capita_consumption">Per Capita consumption (TWh)</option>
+        <option value="capita_production">Per Capita production (TWh)</option>
+        <option value="production">Production (TWh)</option>
+
+      </select>
+
+    </div>
+
+    
+  
+  
+  </div>
+
+  
+
+
+
+
   <div id="map" style="width: 80%;height: 850px;margin: auto"></div>
 
-  <div class="valuecontainer">
+  <div id="year" class="valuecontainer">
     <p id="slide-value" class="year">1900</p>
   </div>
 
 
-  <div class="slidecontainer" style="align-items: center;">
+  <div id="div_range" class="slidecontainer" style="align-items: center;">
     <input type="range" min="1900" max="2019" value="1900" class="slider" id="myRange" oninput="changeNumber()">
   </div>
 </body>
