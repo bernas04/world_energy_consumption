@@ -232,7 +232,7 @@ function readTextFile(file) {
 }
 
 
-const current_year = 1900;
+const current_year = 2010;
 
 var iso_values = readTextFile("../js/data.json");
 
@@ -242,14 +242,13 @@ coal_prod = {}
 
 data.clear()
 iso_values.forEach(country => {
+
+	values = Object.values(country)[0];
+	const result = Object.values(values).find(item => item.year == current_year);
+	coal_prod[result.country] = +result.coal_production;
 	console.log(country)
-	console.log(country[0])
-	// const r = country.find(el => el.year === current_year);
-	// console.log(r);
-	// var d = country.values().filter(obj => {
-	// 	return obj.year === current_year
-	// })
-	coal_prod[d.iso_code] = +d.coal_production;
+	console.log(result.country)
+	
 });
 
 console.log("NEW")
