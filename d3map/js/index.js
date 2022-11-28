@@ -25,12 +25,16 @@ const tooltip = d3.select("body").append("div")
 	.style("opacity", 0);
 
 // Load external data and boot
+
 d3.queue()
 	.defer(d3.json, worldmap)
 	.defer(d3.csv, worldpopulation, function(d) {
 		data.set(d.code, +d.pop);
 	})
 	.await(ready);
+
+
+	
 
 // Add clickable background
 svg.append("rect")
@@ -145,17 +149,18 @@ function ready(error, topo) {
 		.style("opacity", 0.8);
 
 	legend_entry.append("text")
+		.style("fill","#000000")
 		.attr("x", 50)
 		.attr("y", function(d, i) {
 			return height - (i * ls_h) - ls_h - 6;
 		})
 		.text(function(d, i) {
-			if (i === 0) return "< " + d[1] / 1000000 + " m";
-			if (d[1] < d[0]) return d[0] / 1000000 + " m +";
-			return d[0] / 1000000 + " m - " + d[1] / 1000000 + " m";
+			if (i === 0) return "< " + d[1] / 1000000 + " M";
+			if (d[1] < d[0]) return d[0] / 1000000 + " M +";
+			return d[0] / 1000000 + " M - " + d[1] / 1000000 + " M";
 		});
 
-	legend.append("text").attr("x", 15).attr("y", 280).text("Population (Million)");
+	legend.append("text").style("fill","#000000").attr("x"	, 15).attr("y", 280).text("Population (Million)");
 }
 
 // Zoom functionality
@@ -183,3 +188,72 @@ function click(d) {
       .attr("transform", "translate(" + x + "," + y + ") scale(" + k + ")" );
   
 }
+
+
+
+
+
+
+
+
+
+// ==================== code ========================== //
+
+function changeNumber(){
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("slide-value");
+
+    output.innerHTML = slider.value;
+	
+
+}
+
+
+function changeMapColor(){
+	d3.queue()
+	.defer(d3.json, iso_values)
+	.defer(d3.json, iso_values, function(d) {
+		data.set(d.code, +d.pop);
+	})
+	.await(ready);
+}
+
+
+function readTextFile(file) {
+    const request = new XMLHttpRequest();
+	request.open('GET', file, false);  // `false` makes the request synchronous
+	request.send(null);
+
+	if (request.status === 200) {
+		var iso_values = request.responseText
+		return JSON.parse(iso_values);
+	}
+	return undefined;
+}
+
+
+const current_year = 1900;
+
+var iso_values = readTextFile("../js/data.json");
+
+console.log(iso_values)
+
+coal_prod = {}
+
+data.clear()
+iso_values.forEach(country => {
+	console.log(country)
+	console.log(country[0])
+	// const r = country.find(el => el.year === current_year);
+	// console.log(r);
+	// var d = country.values().filter(obj => {
+	// 	return obj.year === current_year
+	// })
+	coal_prod[d.iso_code] = +d.coal_production;
+});
+
+console.log("NEW")
+console.log(coal_prod)
+
+
+
