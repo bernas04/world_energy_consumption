@@ -69,7 +69,7 @@ function ready(error, topo) {
 			.style("top", (d3.event.pageY - 28) + "px")
 			.transition().duration(400)
 			.style("opacity", 1)
-			.text(d.properties.name + ': ' + Math.round((d.total / 1000000) * 10) / 10 + ' mio.');
+			.text(d.properties.name + ': ' + Math.round((d.total / 1000000) * 10) / 10 + ' millions');
 	}
 
 	let mouseLeave = function() {
@@ -206,8 +206,27 @@ function changeNumber(){
     var output = document.getElementById("slide-value");
 
     output.innerHTML = slider.value;
+
+	var position = slider.value-1900
+	var infoYear={}
+
+	for (var i=0; i< iso_values.length; i++){
+		for (const [key, value] of Object.entries(iso_values[i])) {
+			var iso_code = value[0].iso_code
+			var population = value[0].population
+
+			if (iso_code!==undefined && population!== undefined){
+				infoYear[iso_code] = parseInt(population)
+			}
+			
+		}
+	}
 	
 
+	
+	svg.data = d3.map(infoYear)
+
+	getData()
 }
 
 
@@ -255,10 +274,30 @@ const current_year = 2010;
 
 var all_data = loadAndProcessData("../js/data.json");
 
-console.log(all_data);
 
-// console.log("Uodate")
-// data = d3.map(coal_prod);
-// console.log(Object.keys(data))
-// console.log(Object.values(data))
+function getData(){
+	var current_year = document.getElementById("slide-value").innerHTML
+	console.log(current_year)
+
+	coal_prod = {}
+	coal_prod_per_capita = {}
+
+	data.clear()
+	iso_values.forEach(country => {
+
+		values = Object.values(country)[0];
+		const result = Object.values(values).find(item => item.year == current_year);
+		if (result !== undefined && result.coal_production !== undefined && result.coal_prod_per_capita!==undefined && result.iso_code !== undefined ) {
+			coal_prod[result.iso_code] = +result.coal_production;
+			coal_prod_per_capita[result.iso_code] = +parseFloat(result.coal_prod_per_capita);
+		}
+
+	});
+
+
+	//data = d3.map(coal_prod);
+	console.log(coal_prod)
+	console.log(coal_prod_per_capita)
+
+}
 
