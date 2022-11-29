@@ -1,6 +1,5 @@
 // initial setup
-var svg = 
-	d3.select("svg"),
+var svg = d3.select("svg"),
 	width = svg.attr("width"),
 	height = svg.attr("height"),
 	path = d3.geoPath(),
@@ -245,27 +244,29 @@ function readTextFile(file) {
 }
 
 
-const current_year = 1900;
+const current_year = 2010;
 
 var iso_values = readTextFile("../js/data.json");
 
 
-/* coal_prod = {}
+
+function getData(){
+	
+}
+
+coal_prod = {}
 
 data.clear()
 iso_values.forEach(country => {
-	console.log(country)
-	console.log(country[0])
-	// const r = country.find(el => el.year === current_year);
-	// console.log(r);
-	// var d = country.values().filter(obj => {
-	// 	return obj.year === current_year
-	// })
-	coal_prod[d.iso_code] = +d.coal_production;
+
+	values = Object.values(country)[0];
+	const result = Object.values(values).find(item => item.year == current_year);
+	if (result != undefined) {
+		coal_prod[result.iso_code] = +result.coal_production;
+	}
+
 });
 
-console.log("NEW")
-console.log(coal_prod)
- */
 
+data = d3.map(coal_prod);
 
