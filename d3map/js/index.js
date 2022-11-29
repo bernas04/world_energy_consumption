@@ -1,5 +1,6 @@
 // initial setup
-const svg = d3.select("svg"),
+var svg = 
+	d3.select("svg"),
 	width = svg.attr("width"),
 	height = svg.attr("height"),
 	path = d3.geoPath(),
@@ -67,7 +68,7 @@ function ready(error, topo) {
 			.style("top", (d3.event.pageY - 28) + "px")
 			.transition().duration(400)
 			.style("opacity", 1)
-			.text(d.properties.name + ': ' + Math.round((d.total / 1000000) * 10) / 10 + ' mio.');
+			.text(d.properties.name + ': ' + Math.round((d.total / 1000000) * 10) / 10 + ' millions');
 	}
 
 	let mouseLeave = function() {
@@ -204,19 +205,31 @@ function changeNumber(){
     var output = document.getElementById("slide-value");
 
     output.innerHTML = slider.value;
+
+	var position = slider.value-1900
+	var infoYear={}
+
+	for (var i=0; i< iso_values.length; i++){
+		for (const [key, value] of Object.entries(iso_values[i])) {
+			var iso_code = value[0].iso_code
+			var population = value[0].population
+
+			if (iso_code!==undefined && population!== undefined){
+				infoYear[iso_code] = parseInt(population)
+			}
+			
+		}
+	}
+	
+
+	
+	svg.data = d3.map(infoYear)
+
+	console.log(data)
 	
 
 }
 
-
-function changeMapColor(){
-	d3.queue()
-	.defer(d3.json, iso_values)
-	.defer(d3.json, iso_values, function(d) {
-		data.set(d.code, +d.pop);
-	})
-	.await(ready);
-}
 
 
 function readTextFile(file) {
@@ -236,9 +249,8 @@ const current_year = 1900;
 
 var iso_values = readTextFile("../js/data.json");
 
-console.log(iso_values)
 
-coal_prod = {}
+/* coal_prod = {}
 
 data.clear()
 iso_values.forEach(country => {
@@ -254,6 +266,6 @@ iso_values.forEach(country => {
 
 console.log("NEW")
 console.log(coal_prod)
-
+ */
 
 
