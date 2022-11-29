@@ -26,13 +26,15 @@ const tooltip = d3.select("body").append("div")
 
 // Load external data and boot
 
+
+console.log("tick")
 d3.queue()
 	.defer(d3.json, worldmap)
 	.defer(d3.csv, worldpopulation, function(d) {
 		data.set(d.code, +d.pop);
 	})
 	.await(ready);
-
+console.log("tac")
 
 	
 
@@ -211,51 +213,52 @@ function changeNumber(){
 
 function changeMapColor(){
 	d3.queue()
-	.defer(d3.json, iso_values)
-	.defer(d3.json, iso_values, function(d) {
+	.defer(d3.json, all_data)
+	.defer(d3.json, all_data, function(d) {
 		data.set(d.code, +d.pop);
 	})
 	.await(ready);
 }
 
 
-function readTextFile(file) {
+function loadAndProcessData(file) {
+
     const request = new XMLHttpRequest();
 	request.open('GET', file, false);  // `false` makes the request synchronous
 	request.send(null);
 
 	if (request.status === 200) {
-		var iso_values = request.responseText
-		return JSON.parse(iso_values);
+		var responseText = request.responseText
+		data =  JSON.parse(responseText);
+
+		proccessed_data = {}
+		data.forEach(country => {
+
+			// Store country data by year (key) and attributes (value)
+			const country_data = Object.fromEntries(
+				Object.values(country)[0].map(e => [e.year, e])
+			)
+
+			// Get country iso_code by selecting random object and pick attribute:
+			const keys = Object.keys(country_data);
+			const key = keys[Math.floor(Math.random() * keys.length)];
+			const iso_code = country_data[key].iso_code;
+			if (iso_code != undefined) proccessed_data[iso_code] = country_data;
+			
+		});
+		return proccessed_data;
 	}
 	return undefined;
 }
 
-
 const current_year = 2010;
 
-var iso_values = readTextFile("../js/data.json");
+var all_data = loadAndProcessData("../js/data.json");
 
-console.log(iso_values)
+console.log(all_data);
 
-coal_prod = {}
-
-data.clear()
-iso_values.forEach(country => {
-
-	values = Object.values(country)[0];
-	const result = Object.values(values).find(item => item.year == current_year);
-	if (result != undefined) {
-		coal_prod[result.iso_code] = +result.coal_production;
-	}
-
-});
-
-console.log("NEW")
-console.log(coal_prod)
-
-console.log("Uodate")
-data = d3.map(coal_prod);
-console.log(Object.keys(data))
-console.log(Object.values(data))
+// console.log("Uodate")
+// data = d3.map(coal_prod);
+// console.log(Object.keys(data))
+// console.log(Object.values(data))
 
