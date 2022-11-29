@@ -1,5 +1,5 @@
 // initial setup
-const svg = d3.select("svg"),
+var svg = d3.select("svg"),
 	width = svg.attr("width"),
 	height = svg.attr("height"),
 	path = d3.geoPath(),
@@ -245,14 +245,17 @@ iso_values.forEach(country => {
 
 	values = Object.values(country)[0];
 	const result = Object.values(values).find(item => item.year == current_year);
-	coal_prod[result.country] = +result.coal_production;
-	console.log(country)
-	console.log(result.country)
-	
+	if (result != undefined) {
+		coal_prod[result.iso_code] = +result.coal_production;
+	}
+
 });
 
 console.log("NEW")
 console.log(coal_prod)
 
-
+console.log("Uodate")
+data = d3.map(coal_prod);
+console.log(Object.keys(data))
+console.log(Object.values(data))
 
