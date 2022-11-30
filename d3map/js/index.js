@@ -275,17 +275,40 @@ function updateData() {
 			result[iso_code] = NaN;
 		} else {
 			value = year_object[attribute];
-			result[iso_code] = value;
+			result[iso_code] = +value;
 		}
 	}
 
+	console.log(typeof(result))
 
+	world.selectAll("path").remove();
 
 	world.selectAll("path")
-		.data(result)
-		.transition()
-		.delay(100)
-		.duration(500)
+		.data([result])
+		.enter()
+		.append("path")
+		.attr("d", d3.geoPath().projection(projection))
+		.attr("fill", function(d) {
+			d.total = data.get(d[attribute]) || 0;
+			return colorScale(d.total);
+		})
+		.style("stroke", "transparent")
+		.attr("class", function(d) {
+			return "Country"
+		})
+		.attr("id", function(d) {
+			return d.id
+		})
+		.style("opacity", 1)
+		.on("click", click);
+
+	console.log(world)
+
+/* 	world.selectAll("path")
+		// .data(result)
+		// .transition()
+		// .delay(100)
+		// .duration(500)
 		.attr("fill",  function(d) {
 			const value = d[attribute];
 			if (value) {
@@ -294,7 +317,7 @@ function updateData() {
 			  return '#ccc';
 			}
 		});
-
+ */
 
 		
 	return result;
