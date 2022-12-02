@@ -5,9 +5,10 @@ var svg = d3.select("svg"),
 	path = d3.geoPath(),
 	data = d3.map(),
 	worldmap = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson",
-	worldpopulation = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv";
+	worldpopulation = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv",
+	centered,
+	world;
 
-let centered, world;
 
 // style of geographic projection and scaling
 const projection = d3.geoRobinson()
@@ -26,15 +27,12 @@ const tooltip = d3.select("body").append("div")
 
 // Load external data and boot
 
-
-console.log("tick")
 d3.queue()
 	.defer(d3.json, worldmap)
 	.defer(d3.csv, worldpopulation, function(d) {
 		data.set(d.code, +d.pop);
 	})
 	.await(ready);
-console.log("tac")
 
 	
 
@@ -163,6 +161,7 @@ function ready(error, topo) {
 		});
 
 	legend.append("text").style("fill","#000000").attr("x"	, 15).attr("y", 280).text("Population (Million)");
+
 }
 
 // Zoom functionality
@@ -201,42 +200,21 @@ function click(d) {
 
 // ==================== code ========================== //
 
-function changeNumber(){
-    var slider = document.getElementById("myRange");
-    var output = document.getElementById("slide-value");
+isEnergy = false;
 
-    output.innerHTML = slider.value;
-
-	var position = slider.value-1900
-	var infoYear={}
-
-	for (var i=0; i< iso_values.length; i++){
-		for (const [key, value] of Object.entries(iso_values[i])) {
-			var iso_code = value[0].iso_code
-			var population = value[0].population
-
-			if (iso_code!==undefined && population!== undefined){
-				infoYear[iso_code] = parseInt(population)
-			}
-			
-		}
+// all data / energy source (radio button change event)
+function energySelect(boolean) {
+    isEnergy = boolean;
+	if (boolean == true) {
+		document.getElementById("source").disabled = false;
+		document.getElementById("all_metric").hidden = true;
+		document.getElementById("metric").hidden = false;
+	} else {
+		document.getElementById("source").disabled = true;
+		document.getElementById("all_metric").hidden = false;
+		document.getElementById("metric").hidden = true;
 	}
-	
-
-	
-	svg.data = d3.map(infoYear)
-
-	getData()
-}
-
-
-function changeMapColor(){
-	d3.queue()
-	.defer(d3.json, all_data)
-	.defer(d3.json, all_data, function(d) {
-		data.set(d.code, +d.pop);
-	})
-	.await(ready);
+	updateData();
 }
 
 
@@ -248,10 +226,10 @@ function loadAndProcessData(file) {
 
 	if (request.status === 200) {
 		var responseText = request.responseText
-		data =  JSON.parse(responseText);
+		all_data = JSON.parse(responseText);
 
 		proccessed_data = {}
-		data.forEach(country => {
+		all_data.forEach(country => {
 
 			// Store country data by year (key) and attributes (value)
 			const country_data = Object.fromEntries(
@@ -270,34 +248,83 @@ function loadAndProcessData(file) {
 	return undefined;
 }
 
-const current_year = 2010;
 
-var all_data = loadAndProcessData("../js/data.json");
+function updateData() {
+	
+	const current_year = document.getElementById("myRange").value;
+	document.getElementById("slide-value").innerText = current_year;
+	var attribute;
+	if (isEnergy == true) {
+		const source = document.getElementById("source").value;
+		const metric = document.getElementById("metric").value;
+		attribute = source + metric;
+	} else {
+		attribute = document.getElementById("all_metric").value;
+	}
 
-
-function getData(){
-	var current_year = document.getElementById("slide-value").innerHTML
+	console.log("UPDATING DATA")
+	console.log(attribute)
 	console.log(current_year)
 
-	coal_prod = {}
-	coal_prod_per_capita = {}
+	var result = {};
 
-	data.clear()
-	iso_values.forEach(country => {
+	for (const [iso_code, values] of Object.entries(all_data)) {
 
-		values = Object.values(country)[0];
-		const result = Object.values(values).find(item => item.year == current_year);
-		if (result !== undefined && result.coal_production !== undefined && result.coal_prod_per_capita!==undefined && result.iso_code !== undefined ) {
-			coal_prod[result.iso_code] = +result.coal_production;
-			coal_prod_per_capita[result.iso_code] = +parseFloat(result.coal_prod_per_capita);
+		year_object = values[current_year];
+		if (year_object == undefined || year_object[attribute] == undefined) {
+			result[iso_code] = NaN;
+		} else {
+			value = year_object[attribute];
+			result[iso_code] = +value;
 		}
+	}
 
-	});
+	console.log(typeof(result))
 
+	world.selectAll("path").remove();
 
-	//data = d3.map(coal_prod);
-	console.log(coal_prod)
-	console.log(coal_prod_per_capita)
+	world.selectAll("path")
+		.data([result])
+		.enter()
+		.append("path")
+		.attr("d", d3.geoPath().projection(projection))
+		.attr("fill", function(d) {
+			d.total = data.get(d[attribute]) || 0;
+			return colorScale(d.total);
+		})
+		.style("stroke", "transparent")
+		.attr("class", function(d) {
+			return "Country"
+		})
+		.attr("id", function(d) {
+			return d.id
+		})
+		.style("opacity", 1)
+		.on("click", click);
+
+	console.log(world)
+
+/* 	world.selectAll("path")
+		// .data(result)
+		// .transition()
+		// .delay(100)
+		// .duration(500)
+		.attr("fill",  function(d) {
+			const value = d[attribute];
+			if (value) {
+			  return color_legend(d[attribute]);
+			} else {
+			  return '#ccc';
+			}
+		});
+ */
+
+		
+	return result;
 
 }
 
+var all_data = loadAndProcessData("../js/data.json");
+
+attribute_data = updateData();
+data = d3.map(attribute_data)

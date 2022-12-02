@@ -38,69 +38,71 @@
 
             <div class="col-md-3">
 
-                <p><b>All sources/ One source</b></p>
+                <p><b>All sources/One source</b></p>
 
 
                 <div>
-                    <input type="radio" id="all_data" name="drone" value="all_data" checked>
+                    <input type="radio" id="all_data" name="drone" onclick="energySelect(false);" value="all_data" checked>
                     <label for="all_data">All Data</label>
                 </div>
 
                 <div>
-                    <input type="radio" id="select_source" name="drone" value="select_source">
+                    <input type="radio" id="select_source" name="drone" onclick="energySelect(true);" value="select_source">
                     <label for="select_source">Select a source</label>
                 </div>
 
             </div>
 
-
-            <div class="col-md-3">
+            <div class="col-md-4">
 
                 <p><b>Energy source</b></p>
 
-
-                <select class="custom-select" name="source" id="source" style="width: 100px;">
+                <select disabled class="custom-select" name="source" id="source" onchange="updateData()" style="width: auto;">
+                    <option value="oil">Oil</option>
                     <option value="gas">Gas</option>
+                    <option value="coal">Coal</option>
+                    <option value="fossil">Fossil (Oil, Gas, Coil)</option>
                     <option value="wind">Wind</option>
                     <option value="solar">Solar</option>
+                    <option value="hydro">Hydro</option>
+                    <option value="biofuel">Biofuel</option>
+                    <option value="nuclear">Nuclear</option>
+                    <option value="other_renewable">Other Renewables</option>
+                    <option value="renewables">Renewables</option>
+                    <option value="low_carbon">Low-Carbon (Renewables, Nuclear)</option>
                 </select>
 
             </div>
 
-            <div class="col-md-3">
-
-                <p><b>Electricity or Primary:</b></p>
-
-
-                <div>
-                    <input type="radio" id="electricity" name="teste" value="electricity" checked>
-                    <label for="electricity">Electricity</label>
-                </div>
-
-                <div>
-                    <input type="radio" id="primary_energy" name="teste" value="primary_energy">
-                    <label for="primary_energy">Primary Energy</label>
-                </div>
-
-            </div>
-
-
-            <div class="col-md-3">
+            <div class="col-md-5">
 
                 <p><b>Metric</b></p>
 
-
-                <select class="custom-select" name="source" id="source" style="width: auto;">
-                    <option value="annual_change_percentage">Annual change (%) in consumption</option>
-                    <option value="annual_change_terawats">Annual change (TWh) in consumption</option>
-                    <option value="share_of_electricity">Share of electricity/primary energy consumption</option>
-                    <option value="capita_consumption">Per Capita consumption (TWh)</option>
-                    <option value="capita_production">Per Capita production (TWh)</option>
-                    <option value="production">Production (TWh)</option>
-
+                <select class="custom-select" name="all_metric" id="all_metric" onchange="updateData()" style="width: auto;">
+                    <option value="population">Population</option>
+                    <option value="gdp">Gross Domestic Product (GDP)</option>
+                    <option value="electricity_generation">Electricity Generation (TWh)</option>
+                    <option value="per_capita_electricity">Electricy Consumption per Capita (KWh)</option>
+                    <option value="primary_energy_consumption">Primary Energy Consumption (TWh)</option>
+                    <option value="energy_per_gdp">Primary Energy Consumption per GDP (KWh)</option>
+                    <option value="energy_per_capita">Primary Energy Consumption per Capita (KWh)</option>
+                    <option value="energy_cons_change_twh">Primary Energy Consumption Change (TWh)</option>
                 </select>
-                
 
+                <select hidden class="custom-select" name="metric" id="metric" onchange="updateData()" style="width: auto;">
+                    <option value="_consumption">Consumption (TWh)</option>
+                    <option value="_cons_change_twh">Consumption Change (TWh)</option>
+                    <option value="_production">Production (TWh)</option>
+                    <option value="_prod_change_twh">Production Change (TWh)</option>
+                    <option value="_share_elec">Electricity Share (%)</option>
+                    <option value="_share_energy">Primary Energy Share (%)</option>
+                    <option value="_electricity">Electricity (TWh)</option>
+                    <option value="_elec_per_capita">Electricity per Capita (KWh)</option>
+                    <option value="_cons_per_capita">Consumption per Capita (KWh)</option>
+                    <option value="_prod_per_capita">Production per Capita (KWh)</option>
+                </select>
+
+            </div>
 
         </div>
 
@@ -110,11 +112,11 @@
 
         <div class="row guide" id="div_slider" style="padding-top: 25px">
             <div id="year" class="valuecontainer">
-                <p id="slide-value" class="year">1900</p>
+                <p id="slide-value" class="year">2019</p>
             </div>
         
             <div id="div_range" class="slidecontainer" style="align-items: center">
-                <input type="range" min="1900" max="2019" value="1900" class="slider" id="myRange" oninput="changeNumber()">
+                <input type="range" min="1900" max="2019" value="2019" class="slider" id="myRange" onchange="updateData()">
             </div>
         </div>
 
