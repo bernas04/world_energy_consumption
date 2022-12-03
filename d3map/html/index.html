@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<title>World Energy Consumption</title>
+<link rel = "icon" href = "https://erepublic.brightspotcdn.com/dims4/default/f5edd6a/2147483647/strip/true/crop/940x457+0+87/resize/1440x700!/quality/90/?url=http%3A%2F%2Ferepublic-brightspot.s3.amazonaws.com%2Fb9%2F06%2Fb3209bfdefdbe332f63558fa5a31%2Fshutterstock-1071567711.jpg" type = "image/x-icon">
 
 <script src="https://d3js.org/d3.v4.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -16,6 +18,10 @@
 
 
 <body>
+    <nav class="navbar navbar-light" style="background-color: rgba(0, 0, 0, 0.2);">
+        <img src="../assets/img.png" alt="Planet">
+        <span class="navbar-brand mb-0 h1">World Energy Consumption</span>
+      </nav>
 
     <div class="container">
 
@@ -24,12 +30,22 @@
                 <button onclick="
                     document.getElementById('div_map').style.display = '';
                     document.getElementById('div_slider').style.display = '';
-                  ">Map
+                    document.getElementById('div_chart').style.visibility = 'hidden';
+                    energySelect(true);
+                    document.getElementById('select_source').disabled = false;
+
+                    mapDisplay();
+                    keepOneGraph();
+                  ">Map 
 
                 </button>
                 <button onclick="
                   document.getElementById('div_map').style.display = 'none';
                     document.getElementById('div_slider').style.display = 'none';
+                    document.getElementById('div_chart').style.visibility = 'visible';
+                    document.getElementById('select_source').disabled = true;
+                    energySelect(false);
+                    drawScatterPlot();
                 ">Chart</button>
             </div>
         </div>
@@ -47,7 +63,9 @@
                 </div>
 
                 <div>
-                    <input type="radio" id="select_source" name="drone" onclick="energySelect(true);" value="select_source">
+                    <input type="radio" id="select_source" name="drone" 
+                    onclick="energySelect(true);"
+                    value="select_source">
                     <label for="select_source">Select a source</label>
                 </div>
 
@@ -57,7 +75,10 @@
 
                 <p><b>Energy source</b></p>
 
-                <select disabled class="custom-select" name="source" id="source" onchange="updateData()" style="width: auto;">
+                <select disabled class="custom-select" name="source" id="source" 
+                onchange="updateData();
+                " 
+                style="width: auto;">
                     <option value="oil">Oil</option>
                     <option value="gas">Gas</option>
                     <option value="coal">Coal</option>
@@ -78,7 +99,7 @@
 
                 <p><b>Metric</b></p>
 
-                <select class="custom-select" name="all_metric" id="all_metric" onchange="updateData()" style="width: auto;">
+                <select class="custom-select" name="all_metric" id="all_metric" onchange="updateData(); drawScatterPlot();" style="width: auto;">
                     <option value="population">Population</option>
                     <option value="gdp">Gross Domestic Product (GDP)</option>
                     <option value="electricity_generation">Electricity Generation (TWh)</option>
@@ -89,7 +110,9 @@
                     <option value="energy_cons_change_twh">Primary Energy Consumption Change (TWh)</option>
                 </select>
 
-                <select hidden class="custom-select" name="metric" id="metric" onchange="updateData()" style="width: auto;">
+                <select hidden class="custom-select" name="metric" id="metric" 
+                onchange="updateData()" 
+                style="width: auto;">
                     <option value="_consumption">Consumption (TWh)</option>
                     <option value="_cons_change_twh">Consumption Change (TWh)</option>
                     <option value="_production">Production (TWh)</option>
@@ -120,8 +143,32 @@
             </div>
         </div>
 
+        <div class="row chart_div" id="div_chart" style="margin: auto; padding-top: 20px; padding-bottom: 20px; display: flex;">
+            <div class="col-md-1">
+                <p style="display: flex;"><b>Countries:</b></p>
+            </div>
+            <div class="col-md-11">
+                <select class="custom-select" 
+                onchange="drawScatterPlot();"
+                name="country" id="countries" multiple>
+                </select>
+            </div>
+        </div>
+
+        <div class="row" id="parent" style="margin: auto; padding-top: 20px; padding-bottom: 20px; display: flex;">
+            <div id="scatter_plot">
+
+            </div>
+        </div>
+
     </div>
 
+    <footer class="bg-light text-center text-lg-start">
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+          © 2022 Copyright:
+          <a class="text-dark" href="https://github.com/bernas04/world_energy_consumption">GitHub</a>
+        </div>
+    </footer>
 </body>
 
 
