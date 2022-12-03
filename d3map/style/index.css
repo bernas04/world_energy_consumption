@@ -130,6 +130,7 @@ body {
   font-family: Arial;
 }
 
+
 .custom-select select {
   display: none; /*hide original SELECT element: */
 }
@@ -182,4 +183,8 @@ body {
 
 .select-items div:hover, .same-as-selected {
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+.chart_div {
+  visibility: hidden;
 }
