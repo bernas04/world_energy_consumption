@@ -383,6 +383,30 @@ function keepOneGraph() {
 
 // ==================== code ========================== //
 
+
+/* function getDataFromSource(){
+  
+  let source = document.getElementById("source").value;
+  let metric = document.getElementById("metric").value;
+  let selectedCountries = getSelectedOptions();
+  
+  
+
+
+
+  const searching = source + metric;
+  console.log(searching)
+
+  for (let [country, year_object] of Object.entries(all_data)) {
+    if (country in selectedCountries) {
+      for (let [year, value] of Object.entries(year_object)) {
+        console.log("-" , value.searching)
+      }
+    }
+  }
+} */
+
+
 function getSelectedOptions() {
   let selectedOptions = {};
   let options = document.getElementById("countries");
@@ -519,7 +543,7 @@ function getDataGraph(current_country) {
   const attribute = document.getElementById("all_metric").value;
   var final = [];
   var result = {};
-
+ 
   for (const [iso_code, values] of Object.entries(all_data)) {
     if (iso_code.toLocaleLowerCase() === current_country.toLocaleLowerCase()) {
       for (const [year, year_object] of Object.entries(values)) {
