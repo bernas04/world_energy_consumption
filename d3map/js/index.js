@@ -60,7 +60,7 @@ function ready(error, topo) {
 	if (error) throw error;
 
 
-	console.log(topo)
+	console.log(data)
 
 	// Callback functions to update data (d3.map())
 
@@ -75,21 +75,13 @@ function ready(error, topo) {
 	    attribute = document.getElementById("all_metric").value;
 	}
 
-	topo.features.forEach(country => {
-		console.log(country)
-	    const country_data = Object.values(country)[0].find(e => e.year == current_year);
-	    if (country_data != undefined) data.set(country_data, +country_data[attribute]);
-	    if (country_data != undefined) console.log(+country_data[attribute])
-	});
-
-	console.log(data)
-
-
+	for (const [iso_code, years] of Object.entries(all_data)) {
+		if (years[current_year] != undefined) data.set(iso_code, +years[current_year][attribute])
+	}
 
 	console.log(topo.features)
 
 	let mouseOver = function(d) {
-		console.log("pais", d)
 		d3.selectAll(".Country")
 			.transition()
 			.duration(200)
@@ -104,7 +96,7 @@ function ready(error, topo) {
 			.style("top", (d3.event.pageY - 28) + "px")
 			.transition().duration(400)
 			.style("opacity", 1)
-			.text(d.properties.name + ': ' + Math.round(result[d.id]));
+			.text(d.properties.name + ': ' + Math.round(d.total));
 	}
 
 	let mouseLeave = function() {
@@ -135,7 +127,6 @@ function ready(error, topo) {
 
 		// set the color of each country
 		.attr("fill", function(d) {
-			console.log("hey")
 			d.total = data.get(d.id) || 0;
 			return colorScale(d.total);
 		})
