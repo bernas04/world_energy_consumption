@@ -18,6 +18,9 @@ function updateData() {
 	console.log("updating data")
 	console.log(all_data)
 
+	// teste para alterar o domain
+	// colorScale.domain([-20,-5,0,5,20])
+
 	d3.queue()
 		.defer(d3.json, worldmap)
 		.defer(d3.json, '../js/data.json')
@@ -60,11 +63,12 @@ function ready(error, topo) {
 	if (error) throw error;
 
 
-	console.log(data)
+	// Remove previous svgs
+	svg.selectAll("*").remove();
 
 	// Callback functions to update data (d3.map())
 
-	const current_year = document.getElementById("myRange").value;
+	const current_year = document.getElementById("myRange").value;	
 	document.getElementById("slide-value").innerText = current_year;
 	var attribute;
 	if (isEnergy == true) {
@@ -159,6 +163,7 @@ function ready(error, topo) {
 			d = colorScale.invertExtent(d);
 			if (d[0] == null) d[0] = x.domain()[0];
 			if (d[1] == null) d[1] = x.domain()[1];
+			console.log(d)
 			return d;
 		}))
 		.enter().append("g")
@@ -171,7 +176,7 @@ function ready(error, topo) {
 		.attr("x", 20)
 		.attr("y", function(d, i) {
 			return height - (i * ls_h) - 2 * ls_h;
-		})
+		})                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 		.attr("width", ls_w)
 		.attr("height", ls_h)
 		.style("fill", function(d) {
@@ -186,9 +191,10 @@ function ready(error, topo) {
 			return height - (i * ls_h) - ls_h - 6;
 		})
 		.text(function(d, i) {
-			if (i === 0) return "< " + d[1] / 1000000 + " M";
-			if (d[1] < d[0]) return d[0] / 1000000 + " M +";
-			return d[0] / 1000000 + " M - " + d[1] / 1000000 + " M";
+			console.log(d)
+			if (i === 0) return "< " + d[1];
+			if (d[1] < d[0]) return d[0] + "+";
+			return d[0] + " - " + d[1];
 		});
 
 	legend.append("text").style("fill","#000000").attr("x"	, 15).attr("y", 280).text("Population (Million)");
