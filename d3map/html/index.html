@@ -34,7 +34,6 @@
                     energySelect(true);
                     document.getElementById('select_source').disabled = false;
 
-                    mapDisplay();
                     keepOneGraph();
                   ">Map 
 
@@ -99,7 +98,12 @@
 
                 <p><b>Metric</b></p>
 
-                <select class="custom-select" name="all_metric" id="all_metric" onchange="updateData(); drawScatterPlot();" style="width: auto;">
+                <select class="custom-select" name="all_metric" id="all_metric" onchange="updateData(); 
+                if (document.getElementById('div_map').style.display == 'none'){
+                    drawScatterPlot();
+                }
+                
+                " style="width: auto;">
                     <option value="population">Population</option>
                     <option value="gdp">Gross Domestic Product (GDP)</option>
                     <option value="electricity_generation">Electricity Generation (TWh)</option>
