@@ -7,7 +7,23 @@ var svg = d3.select("svg"),
 	worldmap = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson",
 	worldpopulation = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv",
 	centered,
-	world;
+	world,
+	result,
+	iso_names = {};
+
+
+
+function updateData() {
+
+	console.log("updating data")
+	console.log(all_data)
+
+	d3.queue()
+		.defer(d3.json, worldmap)
+		.defer(d3.json, '../js/data.json')
+		.await(ready);
+
+}
 
 
 // style of geographic projection and scaling
@@ -25,17 +41,6 @@ const tooltip = d3.select("body").append("div")
 	.attr("class", "tooltip")
 	.style("opacity", 0);
 
-// Load external data and boot
-
-d3.queue()
-	.defer(d3.json, worldmap)
-	.defer(d3.csv, worldpopulation, function(d) {
-		data.set(d.code, +d.pop);
-	})
-	.await(ready);
-
-	
-
 // Add clickable background
 svg.append("rect")
   .attr("class", "background")
@@ -52,7 +57,39 @@ function ready(error, topo) {
 	// topo is the data received from the d3.queue function (the world.geojson)
 	// the data from world_population.csv (country code and country population) is saved in data variable
 
+	if (error) throw error;
+
+
+	console.log(topo)
+
+	// Callback functions to update data (d3.map())
+
+	const current_year = document.getElementById("myRange").value;
+	document.getElementById("slide-value").innerText = current_year;
+	var attribute;
+	if (isEnergy == true) {
+	    const source = document.getElementById("source").value;
+	    const metric = document.getElementById("metric").value;
+	    attribute = source + metric;
+	} else {
+	    attribute = document.getElementById("all_metric").value;
+	}
+
+	topo.features.forEach(country => {
+		console.log(country)
+	    const country_data = Object.values(country)[0].find(e => e.year == current_year);
+	    if (country_data != undefined) data.set(country_data, +country_data[attribute]);
+	    if (country_data != undefined) console.log(+country_data[attribute])
+	});
+
+	console.log(data)
+
+
+
+	console.log(topo.features)
+
 	let mouseOver = function(d) {
+		console.log("pais", d)
 		d3.selectAll(".Country")
 			.transition()
 			.duration(200)
@@ -67,7 +104,7 @@ function ready(error, topo) {
 			.style("top", (d3.event.pageY - 28) + "px")
 			.transition().duration(400)
 			.style("opacity", 1)
-			.text(d.properties.name + ': ' + Math.round((d.total / 1000000) * 10) / 10 + ' millions');
+			.text(d.properties.name + ': ' + Math.round(result[d.id]));
 	}
 
 	let mouseLeave = function() {
@@ -82,7 +119,7 @@ function ready(error, topo) {
 
 	// Draw the map
 	world = svg.append("g")
-    .attr("class", "world");
+	.attr("class", "world");
 	world.selectAll("path")
 		.data(topo.features)
 		.enter()
@@ -98,6 +135,7 @@ function ready(error, topo) {
 
 		// set the color of each country
 		.attr("fill", function(d) {
+			console.log("hey")
 			d.total = data.get(d.id) || 0;
 			return colorScale(d.total);
 		})
@@ -114,7 +152,9 @@ function ready(error, topo) {
 		.on("mouseover", mouseOver)
 		.on("mouseleave", mouseLeave)
 		.on("click", click);
-  
+
+
+
 	// Legend
 	const x = d3.scaleLinear()
 		.domain([2.6, 75.1])
@@ -187,7 +227,6 @@ function click(d) {
   world.transition()
       .duration(750)
       .attr("transform", "translate(" + x + "," + y + ") scale(" + k + ")" );
-  
 }
 
 
@@ -248,83 +287,14 @@ function loadAndProcessData(file) {
 	return undefined;
 }
 
-
-function updateData() {
-	
-	const current_year = document.getElementById("myRange").value;
-	document.getElementById("slide-value").innerText = current_year;
-	var attribute;
-	if (isEnergy == true) {
-		const source = document.getElementById("source").value;
-		const metric = document.getElementById("metric").value;
-		attribute = source + metric;
-	} else {
-		attribute = document.getElementById("all_metric").value;
-	}
-
-	console.log("UPDATING DATA")
-	console.log(attribute)
-	console.log(current_year)
-
-	var result = {};
-
-	for (const [iso_code, values] of Object.entries(all_data)) {
-
-		year_object = values[current_year];
-		if (year_object == undefined || year_object[attribute] == undefined) {
-			result[iso_code] = NaN;
-		} else {
-			value = year_object[attribute];
-			result[iso_code] = +value;
-		}
-	}
-
-	console.log(typeof(result))
-
-	world.selectAll("path").remove();
-
-	world.selectAll("path")
-		.data([result])
-		.enter()
-		.append("path")
-		.attr("d", d3.geoPath().projection(projection))
-		.attr("fill", function(d) {
-			d.total = data.get(d[attribute]) || 0;
-			return colorScale(d.total);
-		})
-		.style("stroke", "transparent")
-		.attr("class", function(d) {
-			return "Country"
-		})
-		.attr("id", function(d) {
-			return d.id
-		})
-		.style("opacity", 1)
-		.on("click", click);
-
-	console.log(world)
-
-/* 	world.selectAll("path")
-		// .data(result)
-		// .transition()
-		// .delay(100)
-		// .duration(500)
-		.attr("fill",  function(d) {
-			const value = d[attribute];
-			if (value) {
-			  return color_legend(d[attribute]);
-			} else {
-			  return '#ccc';
-			}
-		});
- */
-
-		
-	return result;
-
-}
-
 var all_data = loadAndProcessData("../js/data.json");
+updateData();
 
-attribute_data = updateData();
-data = d3.map(attribute_data)
+// Update iso_names
+
+for (const iso of Object.keys(all_data)) {
+	const years = Object.keys(all_data[iso]);
+	const year = years[Math.floor(Math.random() * years.length)];
+	const name = all_data[iso][year]['country'];
+	iso_names[iso] = name;
+}
