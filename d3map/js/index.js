@@ -296,7 +296,6 @@ function sliderStatus() {
     document.getElementById("play").hidden = true;
     document.getElementById("pause").hidden = false;
 
-
     var refreshId = setInterval(function() {
       const current_year = parseInt(document.getElementById("myRange").value) + 1;
       if (current_year == 2019) {
@@ -306,7 +305,7 @@ function sliderStatus() {
       document.getElementById("myRange").value = current_year;
       document.getElementById("slide-value").innerText = current_year;
       updateData();
-    }, 1000);
+    }, 2000);
 
   } else {
     play = true;
