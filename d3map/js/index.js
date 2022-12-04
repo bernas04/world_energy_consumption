@@ -13,8 +13,6 @@ var svg = d3.select("svg"),
 	column_description,
 	isEnergy;
 
-column_description = d3.tsv('../js/description.tsv');
-
 
 function updateData(boolean) {
   
@@ -130,6 +128,12 @@ function ready(boolean){
         }
       }
       
+      d3.tsv('../js/description.tsv', function(d) {
+        const attribute_object = d.filter(function(d) {
+          return d.column == attribute.replaceAll("_","");
+        })[0];
+        document.getElementById("description").innerText = attribute_object.description;
+      });
 
 
       let mouseOver = function(d) {
