@@ -13,8 +13,8 @@ var svg = d3.select("svg"),
 
 
 
-function updateData() {
-
+function updateData(boolean) {
+  
 
 	// teste para alterar o domain
 	// colorScale.domain([-20,-5,0,5,20])
@@ -22,7 +22,8 @@ function updateData() {
 	d3.queue()
 		.defer(d3.json, worldmap)
 		.defer(d3.json, '../js/data.json')
-		.await(ready);
+		.await(ready(boolean));
+
 
 }
 
@@ -32,10 +33,11 @@ const projection = d3.geoRobinson()
 	.scale(130)
 	.translate([width / 2, height / 2]);
 
-// Define color scale
-const colorScale = d3.scaleThreshold()
-	.domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
-	.range(d3.schemeOrRd[7]);
+
+
+var colorScale = d3.scaleThreshold()
+  .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
+  .range(d3.schemeOrRd[7]);
 
 // add tooltip
 const tooltip = d3.select("body").append("div")
@@ -54,146 +56,183 @@ svg.append("rect")
 //Start of Choropleth drawing
 // ----------------------------
 
-function ready(error, topo) {
-	// topo is the data received from the d3.queue function (the world.geojson)
-	// the data from world_population.csv (country code and country population) is saved in data variable
+function ready(boolean){
 
-	if (error) throw error;
+  return function (error, topo) {
+      // topo is the data received from the d3.queue function (the world.geojson)
+      // the data from world_population.csv (country code and country population) is saved in data variable
+      if (error) throw error;
+      // Remove previous svgs
+      svg.selectAll("*").remove();
 
+      // Callback functions to update data (d3.map())
 
-	// Remove previous svgs
-	svg.selectAll("*").remove();
+      const current_year = document.getElementById("myRange").value;	
+      document.getElementById("slide-value").innerText = current_year;
+      var attribute;
+      if (isEnergy == true) {
+          const source = document.getElementById("source").value;
+          const metric = document.getElementById("metric").value;
+          attribute = source + metric;
+      } else {
+          attribute = document.getElementById("all_metric").value;
+      }
 
-	// Callback functions to update data (d3.map())
-
-	const current_year = document.getElementById("myRange").value;	
-	document.getElementById("slide-value").innerText = current_year;
-	var attribute;
-	if (isEnergy == true) {
-	    const source = document.getElementById("source").value;
-	    const metric = document.getElementById("metric").value;
-	    attribute = source + metric;
-	} else {
-	    attribute = document.getElementById("all_metric").value;
-	}
-
-	for (const [iso_code, years] of Object.entries(all_data)) {
-		if (years[current_year] != undefined) data.set(iso_code, +years[current_year][attribute])
-	}
-
-
-	let mouseOver = function(d) {
-		d3.selectAll(".Country")
-			.transition()
-			.duration(200)
-			.style("opacity", .5)
-			.style("stroke", "transparent");
-		d3.select(this)
-			.transition()
-			.duration(200)
-			.style("opacity", 1)
-			.style("stroke", "black");
-		tooltip.style("left", (d3.event.pageX + 15) + "px")
-			.style("top", (d3.event.pageY - 28) + "px")
-			.transition().duration(400)
-			.style("opacity", 1)
-			.text(d.properties.name + ': ' + Math.round(d.total));
-	}
-
-	let mouseLeave = function() {
-		d3.selectAll(".Country")
-			.transition()
-			.duration(200)
-			.style("opacity", 1)
-			.style("stroke", "transparent");
-		tooltip.transition().duration(300)
-			.style("opacity", 0);
-	}
-
-	// Draw the map
-	world = svg.append("g")
-	.attr("class", "world");
-	world.selectAll("path")
-		.data(topo.features)
-		.enter()
-		.append("path")
-		// draw each country
-		// d3.geoPath() is a built-in function of d3 v4 and takes care of showing the map from a properly formatted geojson file, if necessary filtering it through a predefined geographic projection
-		.attr("d", d3.geoPath().projection(projection))
-
-		//retrieve the name of the country from data
-		.attr("data-name", function(d) {
-			return d.properties.name
-		})
-
-		// set the color of each country
-		.attr("fill", function(d) {
-			d.total = data.get(d.id) || 0;
-			return colorScale(d.total);
-		})
-
-		// add a class, styling and mouseover/mouseleave and click functions
-		.style("stroke", "transparent")
-		.attr("class", function(d) {
-			return "Country"
-		})
-		.attr("id", function(d) {
-			return d.id
-		})
-		.style("opacity", 1)
-		.on("mouseover", mouseOver)
-		.on("mouseleave", mouseLeave)
-		.on("click", click);
+      for (const [iso_code, years] of Object.entries(all_data)) {
+        if (years[current_year] != undefined && iso_code!="OWID_WRL") data.set(iso_code, +years[current_year][attribute])
+      }
 
 
+      
+      let values = Object.values(data);
+      let maxValue = 0;
+      let minValue = 0;
 
-	// Legend
-	const x = d3.scaleLinear()
-		.domain([2.6, 75.1])
-		.rangeRound([600, 860]);
+      for (let i = 0 ; i < values.length; i++){
+        if (values[i] >maxValue) maxValue = values[i];
+        if (values[i] < minValue) minValue = values[i];
+      }
 
-	const legend = svg.append("g")
-		.attr("id", "legend");
+      if (boolean) {
+        
+        let scaleValues = [];
+        let scale = (maxValue - minValue) / 7;
 
-	const legend_entry = legend.selectAll("g.legend")
-		.data(colorScale.range().map(function(d) {
-			d = colorScale.invertExtent(d);
-			if (d[0] == null) d[0] = x.domain()[0];
-			if (d[1] == null) d[1] = x.domain()[1];
-			return d;
-		}))
-		.enter().append("g")
-		.attr("class", "legend_entry");
+        for (let i=0; i<7; i++){
+          scaleValues.push(Math.round( (scale * i) ));
+        }
+        
+        colorScale = d3.scaleThreshold()
+          .domain(scaleValues)
+          .range(d3.schemeOrRd[7]);
 
-	const ls_w = 20,
-		ls_h = 20;
+        if (scaleValues[4] == 0){
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No data available!',
+          })
+          return;
+        }
+      }
+      
 
-	legend_entry.append("rect")
-		.attr("x", 20)
-		.attr("y", function(d, i) {
-			return height - (i * ls_h) - 2 * ls_h;
-		})                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-		.attr("width", ls_w)
-		.attr("height", ls_h)
-		.style("fill", function(d) {
-			return colorScale(d[0]);
-		})
-		.style("opacity", 0.8);
 
-	legend_entry.append("text")
-		.style("fill","#000000")
-		.attr("x", 50)
-		.attr("y", function(d, i) {
-			return height - (i * ls_h) - ls_h - 6;
-		})
-		.text(function(d, i) {
-			if (i === 0) return "< " + d[1];
-			if (d[1] < d[0]) return d[0] + "+";
-			return d[0] + " - " + d[1];
-		});
+      let mouseOver = function(d) {
+        d3.selectAll(".Country")
+          .transition()
+          .duration(200)
+          .style("opacity", .5)
+          .style("stroke", "transparent");
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .style("opacity", 1)
+          .style("stroke", "black");
+        tooltip.style("left", (d3.event.pageX + 15) + "px")
+          .style("top", (d3.event.pageY - 28) + "px")
+          .transition().duration(400)
+          .style("opacity", 1)
+          .text(d.properties.name + ': ' + Math.round(d.total));
+      }
 
-	legend.append("text").style("fill","#000000").attr("x"	, 15).attr("y", 280).text("Population (Million)");
+      let mouseLeave = function() {
+        d3.selectAll(".Country")
+          .transition()
+          .duration(200)
+          .style("opacity", 1)
+          .style("stroke", "transparent");
+        tooltip.transition().duration(300)
+          .style("opacity", 0);
+      }
 
+      // Draw the map
+      world = svg.append("g")
+      .attr("class", "world");
+      world.selectAll("path")
+        .data(topo.features)
+        .enter()
+        .append("path")
+        // draw each country
+        // d3.geoPath() is a built-in function of d3 v4 and takes care of showing the map from a properly formatted geojson file, if necessary filtering it through a predefined geographic projection
+        .attr("d", d3.geoPath().projection(projection))
+
+        //retrieve the name of the country from data
+        .attr("data-name", function(d) {
+          return d.properties.name
+        })
+
+        // set the color of each country
+        .attr("fill", function(d) {
+          d.total = data.get(d.id) || 0;
+          return colorScale(d.total);
+        })
+
+        // add a class, styling and mouseover/mouseleave and click functions
+        .style("stroke", "transparent")
+        .attr("class", function(d) {
+          return "Country"
+        })
+        .attr("id", function(d) {
+          return d.id
+        })
+        .style("opacity", 1)
+        .on("mouseover", mouseOver)
+        .on("mouseleave", mouseLeave)
+        .on("click", click);
+
+
+
+      // Legend
+      const x = d3.scaleLinear()
+        .domain([2.6, 75.1])
+        .rangeRound([600, 860]);
+
+      const legend = svg.append("g")
+        .attr("id", "legend");
+
+      const legend_entry = legend.selectAll("g.legend")
+        .data(colorScale.range().map(function(d) {
+          d = colorScale.invertExtent(d);
+          if (d[0] == null) d[0] = x.domain()[0];
+          if (d[1] == null) d[1] = x.domain()[1];
+          return d;
+        }))
+        .enter().append("g")
+        .attr("class", "legend_entry");
+
+      const ls_w = 20,
+        ls_h = 20;
+
+      legend_entry.append("rect")
+        .attr("x", 20)
+        .attr("y", function(d, i) {
+          return height - (i * ls_h) - 2 * ls_h;
+        })                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+        .attr("width", ls_w)
+        .attr("height", ls_h)
+        .style("fill", function(d) {
+          return colorScale(d[0]);
+        })
+        .style("opacity", 0.8);
+
+      legend_entry.append("text")
+        .style("fill","#000000")
+        .attr("x", 50)
+        .attr("y", function(d, i) {
+          return height - (i * ls_h) - ls_h - 6;
+        })
+        .text(function(d, i) {
+          if (i === 0) return "< " + d[1];
+          if (d[1] < d[0]) return d[0] + "+";
+          return d[0] + " - " + d[1];
+        });
+
+
+      let legend_text = getSelectsOptions();
+      legend.append("text").style("fill","#000000").attr("x"	, 15).attr("y", 280).text(legend_text);
+
+  }
 }
 
 // Zoom functionality
@@ -224,7 +263,25 @@ function click(d) {
 
 
 
+function getSelectsOptions() {
+  let source_select = document.getElementById("source");
+  let all_metric_select = document.getElementById("metric");
 
+  let metric_select = document.getElementById("all_metric");
+
+
+  if (document.getElementById('all_data').checked) {
+    var textMetric = metric_select.options[metric_select.selectedIndex].text;
+    return textMetric
+  }
+  else {
+    var textSource = source_select.options[source_select.selectedIndex].text;
+    var textMetric = all_metric_select.options[all_metric_select.selectedIndex].text;
+    return textSource + " " + textMetric;
+  }
+
+
+}
 
 
 
@@ -452,7 +509,7 @@ function energySelect(boolean) {
     document.getElementById("all_metric").hidden = false;
     document.getElementById("metric").hidden = true;
   }
-  updateData();
+  updateData(true);
 }
 
 function loadAndProcessData(file) {
@@ -551,9 +608,8 @@ function getDataGraph(current_country) {
 
   return final;
 }
-
 var all_data = loadAndProcessData("../js/data.json");
-updateData();
+updateData(true);
 
 
 for (const iso of Object.keys(all_data)) {
@@ -562,4 +618,6 @@ for (const iso of Object.keys(all_data)) {
   const name = all_data[iso][year]['country'];
   iso_names[iso] = name;
 }
+
+
 

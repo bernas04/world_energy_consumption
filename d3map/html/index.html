@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>World Energy Consumption</title>
-<link rel = "icon" href = "https://erepublic.brightspotcdn.com/dims4/default/f5edd6a/2147483647/strip/true/crop/940x457+0+87/resize/1440x700!/quality/90/?url=http%3A%2F%2Ferepublic-brightspot.s3.amazonaws.com%2Fb9%2F06%2Fb3209bfdefdbe332f63558fa5a31%2Fshutterstock-1071567711.jpg" type = "image/x-icon">
+<link rel = "icon" href = "../assets/earth.ico" type = "image/x-icon">
 
 <script src="https://d3js.org/d3.v4.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -16,6 +16,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<!-- Sweet Alert -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <!-- Bootstrap CSS -->
@@ -42,6 +44,12 @@
                     document.getElementById('div_chart').style.visibility = 'hidden';
                     energySelect(true);
                     document.getElementById('select_source').disabled = false;
+
+
+                    document.getElementById('source').disabled = true;
+                    document.getElementById('metric').hidden = true;
+                    document.getElementById('all_metric').hidden = false;
+
 
                     keepOneGraph();
                   ">Map 
@@ -84,7 +92,7 @@
                 <p><b>Energy source</b></p>
 
                 <select disabled class="custom-select" name="source" id="source" 
-                onchange="updateData();
+                onchange=" updateData(true);
                 " 
                 style="width: auto;">
                     <option value="oil">Oil</option>
@@ -107,9 +115,14 @@
 
                 <p><b>Metric</b></p>
 
-                <select class="custom-select" name="all_metric" id="all_metric" onchange="updateDataGraph(); 
+                <select class="custom-select" name="all_metric" id="all_metric" onchange=" 
                 if (document.getElementById('div_map').style.display == 'none'){
+                    updateDataGraph();
                     drawScatterPlot();
+                }
+                else{
+                    
+                    updateData(true);
                 }
                 
                 " style="width: auto;">
@@ -124,7 +137,7 @@
                 </select>
 
                 <select hidden class="custom-select" name="metric" id="metric" 
-                onchange="updateData()" 
+                onchange=" updateData(true);" 
                 style="width: auto;">
                     <option value="_consumption">Consumption (TWh)</option>
                     <option value="_cons_change_twh">Consumption Change (TWh)</option>
@@ -152,7 +165,7 @@
             </div>
         
             <div id="div_range" class="slidecontainer" style="align-items: center">
-                <input type="range" min="1900" max="2019" value="2019" class="slider" id="myRange" oninput="updateData()">
+                <input type="range" min="1900" max="2019" value="2019" class="slider" id="myRange" oninput="updateData(false)">
             </div>
         </div>
 
