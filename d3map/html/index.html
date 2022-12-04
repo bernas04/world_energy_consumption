@@ -38,7 +38,7 @@
 
     <div class="container">
 
-        <div class="row" style="padding-top: 30px; padding-bottom: 20px;">
+        <div class="row" style="padding-top: 30px;">
             <div class="btn-group">
                 <button onclick="
                     document.getElementById('div_map').style.display = '';
@@ -127,22 +127,20 @@
                 
                 " style="width: auto;">
                     <option value="population">Population</option>
-                    <option value="gdp">Gross Domestic Product (GDP)</option>
                     <option value="electricity_generation">Electricity Generation (TWh)</option>
                     <option value="per_capita_electricity">Electricy Consumption per Capita (KWh)</option>
                     <option value="primary_energy_consumption">Primary Energy Consumption (TWh)</option>
-                    <option value="energy_per_gdp">Primary Energy Consumption per GDP (KWh)</option>
                     <option value="energy_per_capita">Primary Energy Consumption per Capita (KWh)</option>
-                    <option value="energy_cons_change_twh">Primary Energy Consumption Change (TWh)</option>
+                    <option value="energy_cons_change_twh">Primary Energy Consumption Change (%)</option>
                 </select>
 
                 <select hidden class="custom-select" name="metric" id="metric" 
                 onchange=" updateData(true);" 
                 style="width: auto;">
                     <option value="_consumption">Consumption (TWh)</option>
-                    <option value="_cons_change_twh">Consumption Change (TWh)</option>
+                    <option value="_cons_change_twh">Consumption Change (%)</option>
                     <option value="_production">Production (TWh)</option>
-                    <option value="_prod_change_twh">Production Change (TWh)</option>
+                    <option value="_prod_change_twh">Production Change (%)</option>
                     <option value="_share_elec">Electricity Share (%)</option>
                     <option value="_share_energy">Primary Energy Share (%)</option>
                     <option value="_electricity">Electricity (TWh)</option>
@@ -156,7 +154,7 @@
         </div>
 
         <div class="descriptions">
-            <p id="description" style="text-align: center;"></p>
+            <p id="description" style="text-align: center; font-family: sans-serif; font-size: 20px;"></p>
         </div>
 
         <div class="map" id="div_map">

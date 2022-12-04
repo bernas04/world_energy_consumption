@@ -83,9 +83,10 @@ function ready(boolean){
         if (years[current_year] != undefined && iso_code!="OWID_WRL") data.set(iso_code, +years[current_year][attribute])
       }
 
+      let values = Object.values(data).filter(function (value) {
+        return !Number.isNaN(value);
+      }).sort(function(a, b){return a-b});
 
-      
-      let values = Object.values(data);
       let maxValue = 0;
       let minValue = 0;
 
@@ -97,15 +98,25 @@ function ready(boolean){
       if (boolean) {
         
         let scaleValues = [];
-        let scale = (maxValue - minValue) / 7;
 
-        for (let i=0; i<7; i++){
-          scaleValues.push(Math.round( (scale * i) ));
+        for (const el of [0.15,0.3,0.45,0.6,0.75,0.9]){
+          const value = d3.quantile(values,el)
+          scaleValues.push(Math.round( value ));
         }
-        
+
         colorScale = d3.scaleThreshold()
           .domain(scaleValues)
           .range(d3.schemeOrRd[7]);
+
+        if (attribute.includes("change")) {
+          colorScale = d3.scaleThreshold()
+          .domain([-10,-5,0,5,10])
+          .range(["#799fcb", "#95b4cc", "#afc7d0", "#eef1e6", "#fec9c9", "#f9665e"]);
+        } else if (attribute.includes("share")) {
+          colorScale = d3.scaleThreshold()
+          .domain([10,25,40,55,75,90])
+          .range(d3.schemeOrRd[7]);
+        }
 
         if (scaleValues[4] == 0){
           Swal.fire({
@@ -192,7 +203,7 @@ function ready(boolean){
 
       // Legendbuttons
       const x = d3.scaleLinear()
-        .domain([2.6, 75.1])
+        .domain([2.6, -1000])
         .rangeRound([600, 860]);
 
       const legend = svg.append("g")
@@ -294,7 +305,6 @@ function getSelectsOptions() {
 var play = false;
 
 function sliderStatus() {
-  console.log(play)
   if (play == true) {
     document.getElementById("play").hidden = true;
     document.getElementById("pause").hidden = false;
@@ -302,7 +312,6 @@ function sliderStatus() {
 
     var refreshId = setInterval(function() {
       const current_year = parseInt(document.getElementById("myRange").value) + 1;
-      console.log("current year", current_year)
       if (current_year == 2019) {
         play = false;
         clearInterval(refreshId);
