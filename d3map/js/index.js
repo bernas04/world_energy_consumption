@@ -47,12 +47,23 @@ const tooltip = d3.select("body").append("div")
 	.attr("class", "tooltip")
 	.style("opacity", 0);
 
+const zoom = d3.zoom()
+          .scaleExtent([1, 8])
+          .translateExtent([[0,0],[width,height]])
+          .on('zoom', function() {
+              svg.selectAll('path')
+              .attr('transform', d3.event.transform);
+          });
+
+svg.call(zoom);
+
+
 // Add clickable background
 svg.append("rect")
   .attr("class", "background")
 	.attr("width", width)
 	.attr("height", height)
-	.on("click", click);
+	//.on("click", click);
 
 
 // ----------------------------
@@ -182,7 +193,7 @@ function ready(boolean){
         .style("opacity", 1)
         .on("mouseover", mouseOver)
         .on("mouseleave", mouseLeave)
-        .on("click", click);
+        //.on("click", click);
 
 
 
@@ -238,30 +249,6 @@ function ready(boolean){
   }
 }
 
-// Zoom functionality
-function click(d) {
-  var x, y, k;
-
-  if (d && centered !== d) {
-    var centroid = path.centroid(d);
-    x = -(centroid[0] * 6);
-    y = (centroid[1] * 6);
-    k = 3;
-    centered = d;
-  } else {
-    x = 0;
-    y = 0;
-    k = 1;
-    centered = null;
-  }
-
-  world.selectAll("path")
-      .classed("active", centered && function(d) { return d === centered; });
-
-  world.transition()
-      .duration(750)
-      .attr("transform", "translate(" + x + "," + y + ") scale(" + k + ")" );
-}
 
 
 
