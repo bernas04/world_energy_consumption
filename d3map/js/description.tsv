@@ -1,0 +1,120 @@
+column	description
+coalprodchangepct	Annual percentage change in coal production
+coalprodchangetwh	Annual change in coal production, measured in terawatt-hours
+gasprodchangepct	Annual percentage change in gas production
+gasprodchangetwh	Annual change in gas production, measured in terawatt-hours
+oilprodchangepct	Annual percentage change in oil production
+oilprodchangetwh	Annual change in oil production, measured in terawatt-hours
+energyconschangepct	Annual percentage change in primary energy consumption
+energyconschangetwh	Annual change in primary energy consumption, measured in terawatt-hours
+biofuelshareelec	Share of electricity consumption that comes from biofuels
+biofuelconschangepct	Annual percentage change in biofuel consumption
+biofuelshareenergy	Share of primary energy consumption that comes from biofuels
+biofuelconschangetwh	Annual change in biofuel consumption, measured in terawatt-hours
+biofuelconsumption	Primary energy consumption from biofuels, measured in terawatt-hours
+biofuelelecpercapita	Per capita electricity consumption from biofuels, measured in kilowatt-hours
+biofuelconspercapita	Per capita primary energy consumption from biofuels, measured in kilowatt-hours
+carbonintensityelec	Carbon intensity of electricity production, measured in grams of carbon dioxide emitted per kilowatt-hour
+coalshareelec	Share of electricity consumption that comes from coal
+coalconschangepct	Annual percentage change in coal consumption
+coalshareenergy	Share of primary energy consumption that comes from coal
+coalconschangetwh	Annual change in coal consumption, measured in terawatt-hours
+coalconsumption	Primary energy consumption from coal, measured in terawatt-hours
+coalelecpercapita	Per capita electricity consumption from coal, measured in kilowatt-hours
+coalconspercapita	Per capita primary energy consumption from coal, measured in kilowatt-hours
+coalproduction	Coal production, measured in terawatt-hours
+coalprodpercapita	Per capita coal production, measured in kilowatt-hours
+electricitygeneration	Electricity generation, measured in terawatt-hours
+biofuelelectricity	Electricity generation from biofuels, measured in terawatt-hours
+coalelectricity	Electricity generation from coal, measured in terawatt-hours
+fossilelectricity	Electricity generation from fossil fuels, measured in terawatt-hours. This is the sum of electricity generation from coal, oil and gas.
+gaselectricity	Electricity generation from gas, measured in terawatt-hours
+hydroelectricity	Electricity generation from hydropower, measured in terawatt-hours
+nuclearelectricity	Electricity generation from nuclear power, measured in terawatt-hours
+oilelectricity	Electricity generation from oil, measured in terawatt-hours
+otherrenewableelectricity	Electricity generation from other renewable sources, measured in terawatt-hours
+otherrenewableexcbiofuelelectricity	Electricity generation from other renewable sources excluding biofuels, measured in terawatt-hours
+renewableselectricity	Electricity generation from renewables, measured in terawatt-hours
+solarelectricity	Electricity generation from solar, measured in terawatt-hours
+windelectricity	Electricity generation from wind, measured in terawatt-hours
+energypergdp	Energy consumption per unit of GDP. This is measured in kilowatt-hours per 2011 international-$.
+energypercapita	Primary energy consumption per capita, measured in kilowatt-hours per year
+fossilconschangepct	Annual percentage change in fossil fuel consumption
+fossilshareenergy	Share of primary energy consumption that comes from fossil fuels
+fossilconschangetwh	Annual change in fossil fuel consumption, measured in terawatt-hours
+fossilfuelconsumption	Fossil fuel consumption, measured in terawatt-hours. This is the sum of primary energy from coal, oil and gas.
+fossilenergypercapita	Per capita fossil fuel consumption, measured in kilowatt-hours. This is the sum of primary energy from coal, oil and gas.
+fossilconspercapita	Per capita fossil fuel consumption, measured in kilowatt-hours. This is the sum of primary energy from coal, oil and gas.
+fossilshareelec	Share of electricity consumption that comes from fossil fuels (coal, oil and gas combined)
+gasshareelec	Share of electricity consumption that comes from gas
+gasconschangepct	Annual percentage change in gas consumption
+gasshareenergy	Share of primary energy consumption that comes from gas
+gasconschangetwh	Annual change in gas consumption, measured in terawatt-hours
+gasconsumption	Primary energy consumption from gas, measured in terawatt-hours
+gaselecpercapita	Per capita electricity consumption from gas, measured in kilowatt-hours
+gasenergypercapita	Per capita primary energy consumption from gas, measured in kilowatt-hours
+gasproduction	Gas production, measured in terawatt-hours
+gasprodpercapita	Per capita gas production, measured in kilowatt-hours
+hydroshareelec	Share of electricity consumption that comes from hydropower
+hydroconschangepct	Annual percentage change in hydropower consumption
+hydroshareenergy	Share of primary energy consumption that comes from hydropower
+hydroconschangetwh	Annual change in hydropower consumption, measured in terawatt-hours
+hydroconsumption	Primary energy consumption from hydropower, measured in terawatt-hours
+hydroelecpercapita	Per capita electricity consumption from hydropower, measured in kilowatt-hours
+hydroenergypercapita	Per capita primary energy consumption from hydropower, measured in kilowatt-hours
+lowcarbonshareelec	Share of electricity consumption that comes from low-carbon sources. This is the sum of electricity from renewables and nuclear
+lowcarbonelectricity	Electricity generation from low-carbon sources, measured in terawatt-hours. This is the sum of electricity generation from renewables and nuclear power
+lowcarbonelecpercapita	Per capita electricity consumption from low-carbon sources, measured in kilowatt-hours
+lowcarbonconschangepct	Annual percentage change in low-carbon energy consumption
+lowcarbonshareenergy	Share of primary energy consumption that comes from low-carbon sources. This is the sum of primary energy from renewables and nuclear
+lowcarbonconschangetwh	Annual change in low-carbon energy consumption, measured in terawatt-hours
+lowcarbonconsumption	Primary energy consumption from low-carbon sources, measured in terawatt-hours
+lowcarbonenergypercapita	Per capita primary energy consumption from low-carbon sources, measured in kilowatt-hours
+nuclearshareelec	Share of electricity consumption that comes from nuclear power
+nuclearconschangepct	Annual percentage change in nuclear consumption
+nuclearshareenergy	Share of primary energy consumption that comes from nuclear power
+nuclearconschangetwh	Annual change in nuclear consumption, measured in terawatt-hours
+nuclearconsumption	Primary energy consumption from nuclear power, measured in terawatt-hours
+nuclearelecpercapita	Per capita electricity consumption from nuclear power, measured in kilowatt-hours
+nuclearenergypercapita	Per capita primary energy consumption from nuclear, measured in kilowatt-hours
+oilshareelec	Share of electricity consumption that comes from oil
+oilconschangepct	Annual percentage change in oil consumption
+oilshareenergy	Share of primary energy consumption that comes from oil
+oilconschangetwh	Annual change in oil consumption, measured in terawatt-hours
+oilconsumption	Primary energy consumption from oil, measured in terawatt-hours
+oilelecpercapita	Primary energy consumption from oil, measured in terawatt-hours
+oilenergypercapita	Per capita primary energy consumption from oil, measured in kilowatt-hours
+oilproduction	Oil production, measured in terawatt-hours
+oilprodpercapita	Per capita oil production, measured in kilowatt-hours
+otherrenewableselecpercapita	Per capita electricity consumption from other renewables, measured in kilowatt-hours
+otherrenewablesshareelec	Share of electricity consumption that comes from other renewables
+otherrenewablesconschangepct	Annual percentage change in energy consumption from other renewables
+otherrenewablesshareenergy	Share of primary energy consumption that comes from other renewables
+otherrenewablesconschangetwh	Annual change in other renewable consumption, measured in terawatt-hours
+otherrenewableconsumption	Primary energy consumption from other renewables, measured in terawatt-hours
+otherrenewablesenergypercapita	Per capita primary energy consumption from other renewables, measured in kilowatt-hours
+percapitaelectricity	Electricity consumption per capita, measured in kilowatt-hours
+population	Total population
+primaryenergyconsumption	Primary energy consumption, measured in terawatt-hours
+renewableselecpercapita	Per capita primary energy consumption from renewables, measured in kilowatt-hours
+renewablesshareelec	Share of electricity consumption that comes from renewables
+renewablesconschangepct	Annual percentage change in renewable energy consumption
+renewablesshareenergy	Share of primary energy consumption that comes from renewables
+renewablesconschangetwh	Annual change in renewable energy consumption, measured in terawatt-hours
+renewablesconsumption	Primary energy consumption from renewables, measured in terawatt-hours
+renewablesenergypercapita	Per capita electricity consumption from renewables, measured in kilowatt-hours
+solarshareelec	Share of electricity consumption that comes from solar
+solarconschangepct	Annual percentage change in solar consumption
+solarshareenergy	Share of primary energy consumption that comes from solar
+solarconschangetwh	Annual change in solar consumption, measured in terawatt-hours
+solarconsumption	Primary energy consumption from solar, measured in terawatt-hours
+solarelecpercapita	Per capita electricity consumption from solar, measured in kilowatt-hours
+solarenergypercapita	Per capita primary energy consumption from solar, measured in kilowatt-hours
+gdp	Total real gross domestic product, inflation-adjusted
+windshareelec	Share of electricity consumption that comes from wind
+windconschangepct	Annual percentage change in wind consumption
+windshareenergy	Share of primary energy consumption that comes from wind
+windconschangetwh	Annual change in wind consumption, measured in terawatt-hours
+windconsumption	Primary energy consumption from wind, measured in terawatt-hours
+windelecpercapita	Per capita electricity consumption from wind, measured in kilowatt-hours
+windenergypercapita	Per capita primary energy consumption from wind, measured in kilowatt-hours
