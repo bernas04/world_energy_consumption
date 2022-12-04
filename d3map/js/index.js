@@ -15,8 +15,6 @@ var svg = d3.select("svg"),
 
 function updateData() {
 
-	console.log("updating data")
-	console.log(all_data)
 
 	// teste para alterar o domain
 	// colorScale.domain([-20,-5,0,5,20])
@@ -83,7 +81,6 @@ function ready(error, topo) {
 		if (years[current_year] != undefined) data.set(iso_code, +years[current_year][attribute])
 	}
 
-	console.log(topo.features)
 
 	let mouseOver = function(d) {
 		d3.selectAll(".Country")
@@ -163,7 +160,6 @@ function ready(error, topo) {
 			d = colorScale.invertExtent(d);
 			if (d[0] == null) d[0] = x.domain()[0];
 			if (d[1] == null) d[1] = x.domain()[1];
-			console.log(d)
 			return d;
 		}))
 		.enter().append("g")
@@ -191,7 +187,6 @@ function ready(error, topo) {
 			return height - (i * ls_h) - ls_h - 6;
 		})
 		.text(function(d, i) {
-			console.log(d)
 			if (i === 0) return "< " + d[1];
 			if (d[1] < d[0]) return d[0] + "+";
 			return d[0] + " - " + d[1];
@@ -316,8 +311,28 @@ function drawScatterPlot() {
   ];
 
   let one_option = Object.keys(countrYearValues)[0];
+
+
+
+
   if (one_option !== undefined) {
-    
+    svg_second_graph.append("g")
+      .attr("class", "legendOrdinal")
+      .attr("transform", "translate(20,20)");
+
+    var countries = Object.keys(countrYearValues)
+
+    var ordinal = d3.scaleOrdinal()
+      .domain(countries)
+      .range(countries.map((d, i) => colors[i]));
+        
+    var legendOrdinal = d3.legendColor()
+      .scale(ordinal);
+
+
+    svg_second_graph.select(".legendOrdinal")
+      .call(legendOrdinal);
+
     // Add X axis
     var x = d3
       .scaleLinear()
@@ -479,7 +494,7 @@ function loadAndProcessData(file) {
   return undefined;
 }
 
-function updateData() {
+function updateDataGraph() {
   const current_year = document.getElementById("myRange").value;
   document.getElementById("slide-value").innerText = current_year;
   var attribute;
