@@ -479,40 +479,6 @@ function loadAndProcessData(file) {
   return undefined;
 }
 
-function updateData() {
-  const current_year = document.getElementById("myRange").value;
-  document.getElementById("slide-value").innerText = current_year;
-  var attribute;
-  if (isEnergy == true) {
-    const source = document.getElementById("source").value;
-    const metric = document.getElementById("metric").value;
-    attribute = source + metric;
-  } else {
-    attribute = document.getElementById("all_metric").value;
-  }
-
-  var result = {};
-
-
-
-  // Update iso_names
-
-  
-
-  for (const [iso_code, values] of Object.entries(all_data)) {
-    year_object = values[current_year];
-    if (year_object == undefined || year_object[attribute] == undefined) {
-      result[iso_code] = NaN;
-    } else {
-      value = year_object[attribute];
-      result[iso_code] = +value;
-    }
-  }
-
-
-  return result;
-}
-
 function getDataGraph(current_country) {
   const attribute = document.getElementById("all_metric").value;
   var final = [];
