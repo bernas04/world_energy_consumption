@@ -9,8 +9,11 @@ var svg = d3.select("svg"),
 	centered,
 	world,
 	result,
-	iso_names = {};
+	iso_names = {},
+	column_description,
+	isEnergy;
 
+column_description = d3.tsv('../js/description.tsv');
 
 
 function updateData() {
@@ -439,7 +442,7 @@ function energySelect(boolean) {
   }
   updateData();
 }
-
+/* 
 function loadAndProcessData(file) {
   const request = new XMLHttpRequest();
   request.open("GET", file, false); // `false` makes the request synchronous
@@ -478,7 +481,7 @@ function loadAndProcessData(file) {
   }
   return undefined;
 }
-
+ */
 function getDataGraph(current_country) {
   const attribute = document.getElementById("all_metric").value;
   var final = [];
@@ -502,10 +505,10 @@ function getDataGraph(current_country) {
 
   return final;
 }
-
+/* 
 var all_data = loadAndProcessData("../js/data.json");
 updateData();
-
+ */
 
 for (const iso of Object.keys(all_data)) {
   const years = Object.keys(all_data[iso]);
