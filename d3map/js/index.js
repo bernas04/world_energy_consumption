@@ -129,7 +129,7 @@ function ready(boolean){
           .range(d3.schemeOrRd[7]);
         }
 
-        if (scaleValues[4] == 0){
+        if (scaleValues[4] == 0 || isNaN(scaleValues[4])){
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -305,7 +305,7 @@ function sliderStatus() {
       document.getElementById("myRange").value = current_year;
       document.getElementById("slide-value").innerText = current_year;
       updateData();
-    }, 2000);
+    }, 1000);
 
   } else {
     play = true;
